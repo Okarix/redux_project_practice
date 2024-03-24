@@ -4,9 +4,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { heroesFetching, heroesFetched, heroesFetchingError, heroDeleted } from '../../actions';
 import HeroesListItem from '../heroesListItem/HeroesListItem';
 import Spinner from '../spinner/Spinner';
+import { createSelector } from 'reselect';
 
 const HeroesList = () => {
-	const { filteredHeroes, heroesLoadingStatus } = useSelector(state => state);
+	const filteredHeroesSelector = createSelector(
+		state => state.filters.activeFilter,
+		state => state.heroes.heroes,
+		(filter, heroes) => {
+			if (filter === 'all') {
+				return heroes;
+			} else {
+				return heroes.filter(hero => hero.element === filter);
+			}
+		}
+	);
+
+	const filteredHeroes = useSelector(filteredHeroesSelector);
+	const { heroesLoadingStatus } = useSelector(state => state.heroes.heroesLoadingStatus);
 	const dispatch = useDispatch();
 	const { request } = useHttp();
 
@@ -15,7 +29,7 @@ const HeroesList = () => {
 		request('https://65feb3a3b2a18489b3866fc2.mockapi.io/api/heroes')
 			.then(data => dispatch(heroesFetched(data)))
 			.catch(() => dispatch(heroesFetchingError()));
-	}, []);
+	}, [dispatch, request]);
 
 	const onDelete = useCallback(
 		id => {
@@ -24,7 +38,7 @@ const HeroesList = () => {
 				.then(dispatch(heroDeleted(id)))
 				.catch(err => console.error(err));
 		},
-		[request]
+		[request, dispatch]
 	);
 
 	if (heroesLoadingStatus === 'loading') {
