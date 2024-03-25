@@ -22,7 +22,7 @@ const HeroesFilters = () => {
 		request('https://65feb3a3b2a18489b3866fc2.mockapi.io/api/filters')
 			.then(data => dispatch(filtersFetched(data)))
 			.catch(() => dispatch(filtersFetchingError()));
-	}, []);
+	}, [request, dispatch]);
 
 	if (filtersLoadingStatus === 'loading') {
 		return <Spinner />;
