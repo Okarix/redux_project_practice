@@ -1,6 +1,7 @@
-import { legacy_createStore as createStore, combineReducers, compose } from 'redux';
+import { legacy_createStore as createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import heroes from '../reducers/heroes';
 import filters from '../reducers/filters';
+import { thunk } from 'redux-thunk';
 
 const stringMiddleware = () => next => action => {
 	if (typeof action === 'string') {
@@ -28,6 +29,6 @@ const stringMiddleware = () => next => action => {
 // 		return store;
 // 	};
 
-const store = createStore(combineReducers({ heroes, filters }), compose(stringMiddleware, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
+const store = createStore(combineReducers({ heroes, filters }), compose(applyMiddleware(thunk, stringMiddleware), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
 
 export default store;

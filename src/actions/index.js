@@ -1,3 +1,10 @@
+export const fetchHeroes = request => dispatch => {
+	dispatch(heroesFetching());
+	request('https://65feb3a3b2a18489b3866fc2.mockapi.io/api/heroes')
+		.then(data => dispatch(heroesFetched(data)))
+		.catch(() => dispatch(heroesFetchingError()));
+};
+
 export const heroesFetching = () => {
 	return {
 		type: 'HEROES_FETCHING',

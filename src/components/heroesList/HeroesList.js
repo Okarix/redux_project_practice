@@ -1,7 +1,7 @@
 import { useHttp } from '../../hooks/http.hook';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { heroesFetching, heroesFetched, heroesFetchingError, heroDeleted } from '../../actions';
+import { fetchHeroes, heroDeleted } from '../../actions';
 import HeroesListItem from '../heroesListItem/HeroesListItem';
 import Spinner from '../spinner/Spinner';
 import { createSelector } from 'reselect';
@@ -25,11 +25,8 @@ const HeroesList = () => {
 	const { request } = useHttp();
 
 	useEffect(() => {
-		dispatch(heroesFetching());
-		request('https://65feb3a3b2a18489b3866fc2.mockapi.io/api/heroes')
-			.then(data => dispatch(heroesFetched(data)))
-			.catch(() => dispatch(heroesFetchingError()));
-	}, [dispatch, request]);
+		dispatch(fetchHeroes(request));
+	}, [dispatch]);
 
 	const onDelete = useCallback(
 		id => {
