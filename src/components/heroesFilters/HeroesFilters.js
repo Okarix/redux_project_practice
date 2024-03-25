@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { useEffect } from 'react';
 import Spinner from '../spinner/Spinner';
 import { filtersFetched, filtersFetchingError, activeFilterChanged, filtersFetching } from '../../redux/slices/filtersSlice.js';
+import { fetchFilters } from '../../redux/slices/filtersSlice.js';
 
 const HeroesFilters = () => {
 	const { filters, filtersLoadingStatus, activeFilter } = useSelector(state => state.filters);
@@ -11,11 +12,8 @@ const HeroesFilters = () => {
 	const { request } = useHttp();
 
 	useEffect(() => {
-		dispatch(filtersFetching());
-		request('https://65feb3a3b2a18489b3866fc2.mockapi.io/api/filters')
-			.then(data => dispatch(filtersFetched(data)))
-			.catch(() => dispatch(filtersFetchingError()));
-	}, [request, dispatch]);
+		dispatch(fetchFilters());
+	}, [dispatch]);
 
 	if (filtersLoadingStatus === 'loading') {
 		return <Spinner />;
